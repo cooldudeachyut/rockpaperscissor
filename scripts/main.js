@@ -13,12 +13,10 @@ function playRound(playerSelection)
 	const computerSelection = computerPlay();
 
 	if (computerSelection == playerSelection)
-	{
-		alert("A tie between " + playerSelection + " vs " + computerSelection + "!");
-		return;
-	}
+		showOutcome(computerSelection, playerSelection, "tie")
+
 	
-	if (computerSelection == "Rock")
+	else if (computerSelection == "Rock")
 	{
 		if (playerSelection == "Paper")
 			showOutcome(computerSelection, playerSelection, "win");
@@ -48,16 +46,28 @@ function playRound(playerSelection)
 
 function showOutcome(computerSelection, playerSelection, result)
 {
-	if (result == "win")
+	let myScore = document.getElementById("my-score");
+	let compScore = document.getElementById("comp-score");
+
+	if (Number(myScore.innerHTML) == 5 || Number(compScore.innerHTML) == 5)
 	{
-		alert("You win! " + playerSelection + " beats " + computerSelection + "!");
-		increaseScore(document.getElementById("my-score"));
+		alert("Reload page to restart the game");
+		return;
+	}
+
+	if (result == "tie")
+		alert("A tie between " + playerSelection + " vs " + computerSelection + "!");
+
+	else if (result == "win")
+	{
+		if (increaseScore(myScore))
+			alert("You win! " + playerSelection + " beats " + computerSelection + "!");
 	}
 
 	else
 	{
-		alert("You lose! " + computerSelection + " beats " + playerSelection + "!");
-		increaseScore(document.getElementById("comp-score"));
+		if (increaseScore(compScore))
+			alert("You lose! " + computerSelection + " beats " + playerSelection + "!");
 	}
 }
 
@@ -65,7 +75,25 @@ function increaseScore(scoreElement)
 {
 	let score = Number(scoreElement.innerHTML);
 	score++;
-	scoreElement.innerHTML = score;
+
+	if (score == 5)
+	{
+		scoreElement.innerHTML = score;
+
+		if (scoreElement.id == "my-score")
+			alert("You won the game!");
+		
+		else
+			alert("You lost the game :(");
+
+		return false;
+	}
+
+	else if (score < 5)
+	{
+		scoreElement.innerHTML = score;
+		return true;
+	}
 }
 
 const rock = document.getElementById("rock");
